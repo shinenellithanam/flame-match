@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAME MATCH - Graffiti Edition</title>
+
+            <!-- APP ICON CONFIGURATION -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+
+
+    <!-- Tailwind CSS for layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Graffiti Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Spray+Paint&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --wall-dark: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--wall-dark);
+            /* Simple CSS pattern to look like a brick wall */
+            background-image: 
+                linear-gradient(335deg, rgba(0,0,0,0.8) 23px, transparent 23px),
+                linear-gradient(155deg, rgba(0,0,0,0.8) 23px, transparent 23px),
+                linear-gradient(335deg, rgba(0,0,0,0.8) 23px, transparent 23px),
+                linear-gradient(155deg, rgba(0,0,0,0.8) 23px, transparent 23px);
+            background-size: 58px 58px;
+            background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+            font-family: 'Permanent Marker', cursive;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .graffiti-title {
+            font-family: 'Rubik Spray Paint', system-ui;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px var(--neon-pink),
+                0 0 30px var(--neon-pink),
+                0 0 40px var(--neon-pink);
+            transform: rotate(-3deg);
+        }
+
+        .container-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 4px dashed var(--neon-pink);
+            box-shadow: 10px 10px 0px var(--neon-blue);
+            backdrop-filter: blur(5px);
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid var(--neon-green);
+            color: white;
+            font-family: 'Permanent Marker', cursive;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        input:focus {
+            outline: none;
+            border-bottom: 3px solid var(--neon-pink);
+            box-shadow: 0 10px 10px -10px var(--neon-pink);
+        }
+
+        .spray-btn {
+            background: var(--neon-pink);
+            color: black;
+            border: none;
+            font-family: 'Rubik Spray Paint', system-ui;
+            clip-path: polygon(5% 0%, 100% 0%, 100% 90%, 95% 100%, 0% 100%, 0% 10%);
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .spray-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .spray-btn:hover {
+            filter: drop-shadow(0 0 10px var(--neon-pink));
+        }
+
+        .result-reveal {
+            animation: drip 1s ease-in-out;
+        }
+
+        @keyframes drip {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .flame-letter {
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .flame-letter.dimmed {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+        .flame-letter.active {
+            transform: scale(1.5);
+            text-shadow: 0 0 15px var(--neon-green);
+            color: var(--neon-green);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-box w-full max-w-md p-8 m-4 rounded-xl text-center relative">
+        <!-- Decoration -->
+        <div class="absolute -top-6 -left-6 text-5xl rotate-12">🔥</div>
+        <div class="absolute -bottom-6 -right-6 text-5xl -rotate-12">💘</div>
+
+        <!-- Title -->
+        <h1 class="graffiti-title text-5xl md:text-6xl mb-8 text-white tracking-wider">
+            FLAME MATCH
+        </h1>
+
+        <!-- Input Section -->
+        <div class="space-y-6">
+            <div class="flex flex-col text-left">
+                <label class="text-neon-blue text-sm mb-1 ml-2">YOUR NAME</label>
+                <input type="text" id="name1" placeholder="ENTER NAME 1" class="w-full text-2xl p-2" autocomplete="off">
+            </div>
+
+            <div class="flex flex-col text-left">
+                <label class="text-neon-blue text-sm mb-1 ml-2">PARTNER NAME</label>
+                <input type="text" id="name2" placeholder="ENTER NAME 2" class="w-full text-2xl p-2" autocomplete="off">
+            </div>
+
+            <button onclick="calculateFlame()" class="spray-btn w-full text-3xl py-4 mt-6 cursor-pointer tracking-widest hover:bg-pink-400">
+                MATCH!
+            </button>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultArea" class="hidden mt-8 border-t-2 border-dashed border-gray-500 pt-6">
+            
+            <!-- The Logic Breakdown (Visual) -->
+            <p class="text-gray-400 text-sm mb-2">REMAINING COUNT: <span id="countDisplay" class="text-white text-xl"></span></p>
+
+            <!-- The FLAME Acronym Display -->
+            <div class="flex justify-center space-x-4 text-3xl mb-6 font-bold" id="flame-acronym">
+                <span id="char-F" class="flame-letter">F</span>
+                <span id="char-L" class="flame-letter">L</span>
+                <span id="char-A" class="flame-letter">A</span>
+                <span id="char-M" class="flame-letter">M</span>
+                <span id="char-E" class="flame-letter">E</span>
+            </div>
+
+            <!-- Final Result -->
+            <div class="result-reveal">
+                <h2 id="finalWord" class="text-5xl text-neon-green mb-2 font-bold graffiti-title" style="color: var(--neon-green);"></h2>
+                <div id="finalEmoji" class="text-6xl animate-bounce"></div>
+            </div>
+        </div>
+
+        <div id="errorMsg" class="hidden text-red-500 mt-4 text-xl">
+            PLEASE ENTER BOTH NAMES!
+        </div>
+    </div>
+
+    <script>
+        function calculateFlame() {
+            // 1. Get Inputs and Normalize
+            const input1 = document.getElementById('name1').value.toUpperCase().replace(/[^A-Z]/g, '');
+            const input2 = document.getElementById('name2').value.toUpperCase().replace(/[^A-Z]/g, '');
+            const resultArea = document.getElementById('resultArea');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Validation
+            if (!input1 || !input2) {
+                errorMsg.classList.remove('hidden');
+                resultArea.classList.add('hidden');
+                return;
+            }
+            errorMsg.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+
+            // 2. Logic: Remove common characters
+            // We convert strings to arrays to manipulate them easily
+            let arr1 = input1.split('');
+            let arr2 = input2.split('');
+
+            // Iterate through first name to find matches in second name
+            for (let i = 0; i < arr1.length; i++) {
+                const char = arr1[i];
+                const indexIn2 = arr2.indexOf(char);
+
+                if (indexIn2 !== -1) {
+                    // Match found! 
+                    // Mark both as null/removed so we don't count them
+                    arr1[i] = null;
+                    arr2[indexIn2] = null; 
+                }
+            }
+
+            // 3. Count remaining letters (filter out nulls)
+            const remaining1 = arr1.filter(c => c !== null);
+            const remaining2 = arr2.filter(c => c !== null);
+            const totalCount = remaining1.length + remaining2.length;
+
+            document.getElementById('countDisplay').innerText = totalCount;
+
+            // 4. Determine FLAME result
+            // F = Friends, L = Love, A = Angry, M = Marriage, E = Enemy
+            const flameKeys = ['F', 'L', 'A', 'M', 'E'];
+            const flameMeanings = {
+                'F': { word: 'FRIENDS', emoji: '🤝' },
+                'L': { word: 'LOVE', emoji: '❤️' },
+                'A': { word: 'ANGRY', emoji: '😡' },
+                'M': { word: 'MARRIAGE', emoji: '💍' },
+                'E': { word: 'ENEMY', emoji: '⚔️' }
+            };
+
+            // Logic: Count left to right 1 to 5. 
+            // If count is > 5, it loops. This is a modulo operation.
+            // Using (count - 1) % 5 gives us the 0-based index.
+            // Example: Count 5. (5-1) % 5 = 4. Index 4 is 'E'.
+            // Example: Count 7. (7-1) % 5 = 1. Index 1 is 'L'.
+            
+            let resultIndex = 0;
+            
+            if (totalCount > 0) {
+                resultIndex = (totalCount - 1) % 5;
+            } else {
+                // Edge case: Count is 0 (Names are identical characters e.g. TOM vs TOM)
+                // We can treat this as "Soulmates" or just default to Love/Friends. 
+                // For pure math adherence to the modulo logic, -1 % 5 is messy in JS.
+                // Let's assume count 0 implies index 0 (F) or handled separately.
+                // For this app, let's treat 0 as "LOVE" (Index 1) just for fun, or standard error.
+                resultIndex = 1; // Default to Love if identical
+            }
+
+            const resultChar = flameKeys[resultIndex];
+            const finalData = flameMeanings[resultChar];
+
+            // 5. Update UI
+            // Reset styles
+            flameKeys.forEach(char => {
+                const el = document.getElementById(`char-${char}`);
+                el.classList.remove('active', 'dimmed');
+                el.classList.add('dimmed'); // Dim all first
+            });
+
+            // Highlight the winner
+            const activeEl = document.getElementById(`char-${resultChar}`);
+            activeEl.classList.remove('dimmed');
+            activeEl.classList.add('active');
+
+            // Set text and emoji
+            document.getElementById('finalWord').innerText = finalData.word;
+            document.getElementById('finalEmoji').innerText = finalData.emoji;
+        }
+    </script>
+</body>
+</html>
