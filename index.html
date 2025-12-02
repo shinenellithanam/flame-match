@@ -9,7 +9,6 @@
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
 
-
     <!-- Tailwind CSS for layout -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Graffiti Style -->
@@ -23,6 +22,8 @@
             --neon-green: #00ff00;
             --neon-blue: #00ffff;
             --wall-dark: #1a1a1a;
+            --marker-yellow: #FFFF00;
+            --marker-grey: #6b7280;
         }
 
         body {
@@ -44,15 +45,22 @@
             overflow-x: hidden;
         }
 
+        /* Updated Title Style */
         .graffiti-title {
-            font-family: 'Rubik Spray Paint', system-ui;
-            text-shadow: 
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 20px var(--neon-pink),
-                0 0 30px var(--neon-pink),
-                0 0 40px var(--neon-pink);
+            font-family: 'Permanent Marker', cursive;
+            color: var(--marker-yellow);
+            /* This creates the grey border effect */
+            -webkit-text-stroke: 2px var(--marker-grey);
+            text-shadow: 4px 4px 0px var(--marker-grey);
             transform: rotate(-3deg);
+            letter-spacing: 2px;
+        }
+
+        /* Result Text Style */
+        .result-text {
+            font-family: 'Permanent Marker', cursive;
+            text-shadow: 3px 3px 0px #000;
+            letter-spacing: 3px;
         }
 
         .container-box {
@@ -107,14 +115,15 @@
         .flame-letter {
             display: inline-block;
             transition: all 0.3s;
+            font-family: 'Permanent Marker', cursive;
         }
         .flame-letter.dimmed {
             opacity: 0.3;
             filter: grayscale(100%);
         }
         .flame-letter.active {
-            transform: scale(1.5);
-            text-shadow: 0 0 15px var(--neon-green);
+            transform: scale(1.3);
+            text-shadow: 0 0 10px var(--neon-green), 2px 2px 0px #000;
             color: var(--neon-green);
         }
     </style>
@@ -126,8 +135,8 @@
         <div class="absolute -top-6 -left-6 text-5xl rotate-12">🔥</div>
         <div class="absolute -bottom-6 -right-6 text-5xl -rotate-12">💘</div>
 
-        <!-- Title -->
-        <h1 class="graffiti-title text-5xl md:text-6xl mb-8 text-white tracking-wider">
+        <!-- Updated Title -->
+        <h1 class="graffiti-title text-5xl md:text-6xl mb-8 tracking-wider">
             FLAME MATCH
         </h1>
 
@@ -165,7 +174,7 @@
 
             <!-- Final Result -->
             <div class="result-reveal">
-                <h2 id="finalWord" class="text-5xl text-neon-green mb-2 font-bold graffiti-title" style="color: var(--neon-green);"></h2>
+                <h2 id="finalWord" class="text-5xl text-neon-green mb-2 font-bold result-text" style="color: var(--neon-green);"></h2>
                 <div id="finalEmoji" class="text-6xl animate-bounce"></div>
             </div>
         </div>
@@ -193,7 +202,6 @@
             resultArea.classList.remove('hidden');
 
             // 2. Logic: Remove common characters
-            // We convert strings to arrays to manipulate them easily
             let arr1 = input1.split('');
             let arr2 = input2.split('');
 
@@ -231,19 +239,12 @@
             // Logic: Count left to right 1 to 5. 
             // If count is > 5, it loops. This is a modulo operation.
             // Using (count - 1) % 5 gives us the 0-based index.
-            // Example: Count 5. (5-1) % 5 = 4. Index 4 is 'E'.
-            // Example: Count 7. (7-1) % 5 = 1. Index 1 is 'L'.
             
             let resultIndex = 0;
             
             if (totalCount > 0) {
                 resultIndex = (totalCount - 1) % 5;
             } else {
-                // Edge case: Count is 0 (Names are identical characters e.g. TOM vs TOM)
-                // We can treat this as "Soulmates" or just default to Love/Friends. 
-                // For pure math adherence to the modulo logic, -1 % 5 is messy in JS.
-                // Let's assume count 0 implies index 0 (F) or handled separately.
-                // For this app, let's treat 0 as "LOVE" (Index 1) just for fun, or standard error.
                 resultIndex = 1; // Default to Love if identical
             }
 
