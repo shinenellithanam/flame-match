@@ -3,168 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAME MATCH - Graffiti Edition</title>
+    <title>FLAME MATCH - Digital Analysis</title>
 
-            <!-- APP ICON CONFIGURATION -->
+     <!-- APP ICON CONFIGURATION -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-
-    <!-- Tailwind CSS for layout -->
+    
+    <!-- Tailwind CSS for utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Graffiti Style -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Spray+Paint&family=Permanent+Marker&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --neon-pink: #ff00ff;
-            --neon-green: #00ff00;
-            --neon-blue: #00ffff;
-            --wall-dark: #1a1a1a;
-            --marker-yellow: #FFFF00;
-            --marker-grey: #6b7280;
+            --primary-accent: #00E0FF; /* Electric Blue */
+            --secondary-accent: #F000FF; /* Magenta */
+            --bg-dark: #10141a;
+            --card-bg: #1e2430;
         }
 
+        /* Use a modern system font stack for clarity */
         body {
-            background-color: var(--wall-dark);
-            /* Simple CSS pattern to look like a brick wall */
-            background-image: 
-                linear-gradient(335deg, rgba(0,0,0,0.8) 23px, transparent 23px),
-                linear-gradient(155deg, rgba(0,0,0,0.8) 23px, transparent 23px),
-                linear-gradient(335deg, rgba(0,0,0,0.8) 23px, transparent 23px),
-                linear-gradient(155deg, rgba(0,0,0,0.8) 23px, transparent 23px);
-            background-size: 58px 58px;
-            background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
-            font-family: 'Permanent Marker', cursive;
-            color: white;
+            background-color: var(--bg-dark);
+            font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            color: #E5E7EB; /* Light grey text */
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
+            /* Ensure no horizontal scroll on mobile */
+            overflow-x: hidden; 
         }
 
-        /* Updated Title Style */
-        .graffiti-title {
-            font-family: 'Permanent Marker', cursive;
-            color: var(--marker-yellow);
-            /* This creates the grey border effect */
-            -webkit-text-stroke: 2px var(--marker-grey);
-            text-shadow: 4px 4px 0px var(--marker-grey);
-            transform: rotate(-3deg);
-            letter-spacing: 2px;
-        }
-
-        /* Result Text Style */
-        .result-text {
-            font-family: 'Permanent Marker', cursive;
-            text-shadow: 3px 3px 0px #000;
-            letter-spacing: 3px;
+        /* Title: Digital/HUD Style */
+        .game-title {
+            color: var(--primary-accent);
+            text-shadow: 0 0 10px rgba(0, 224, 255, 0.8), 0 0 20px rgba(0, 224, 255, 0.4);
+            font-weight: 900;
+            letter-spacing: 4px;
         }
 
         .container-box {
-            background: rgba(0, 0, 0, 0.7);
-            border: 4px dashed var(--neon-pink);
-            box-shadow: 10px 10px 0px var(--neon-blue);
-            backdrop-filter: blur(5px);
+            background: var(--card-bg);
+            /* Border removed as requested */
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 224, 255, 0.2) inset;
+            transition: all 0.3s;
         }
 
         input {
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid var(--neon-green);
+            background: #2b3342;
+            border: 1px solid var(--primary-accent);
+            border-radius: 6px;
             color: white;
-            font-family: 'Permanent Marker', cursive;
-            letter-spacing: 2px;
+            padding: 0.75rem;
+            transition: all 0.3s;
+            letter-spacing: 1px;
             text-transform: uppercase;
+            /* Remove default focus outline */
+            outline: none; 
         }
         
         input:focus {
-            outline: none;
-            border-bottom: 3px solid var(--neon-pink);
-            box-shadow: 0 10px 10px -10px var(--neon-pink);
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 10px rgba(240, 0, 255, 0.6);
         }
 
-        .spray-btn {
-            background: var(--neon-pink);
-            color: black;
+        .game-btn {
+            background: linear-gradient(90deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            color: var(--bg-dark);
+            font-weight: bold;
             border: none;
-            font-family: 'Rubik Spray Paint', system-ui;
-            clip-path: polygon(5% 0%, 100% 0%, 100% 90%, 95% 100%, 0% 100%, 0% 10%);
-            transition: transform 0.1s, filter 0.2s;
+            border-radius: 8px;
+            transition: transform 0.1s, box-shadow 0.3s;
+            letter-spacing: 2px;
         }
 
-        .spray-btn:active {
-            transform: scale(0.95);
+        .game-btn:active {
+            transform: scale(0.98);
         }
         
-        .spray-btn:hover {
-            filter: drop-shadow(0 0 10px var(--neon-pink));
+        .game-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.8);
+            filter: brightness(1.2);
         }
 
+        /* Result Text Style (Cleaned up) */
+        .result-text {
+            font-weight: 800;
+            letter-spacing: 3px;
+        }
+
+        /* FLAME Letter Indicators */
+        .flame-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background: #333;
+            color: #aaa;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            font-size: 1.5rem;
+        }
+        .flame-letter.dimmed {
+            opacity: 0.5;
+        }
+        .flame-letter.active {
+            background: var(--primary-accent);
+            color: var(--card-bg);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary-accent);
+            font-weight: 900;
+        }
+        
         .result-reveal {
-            animation: drip 1s ease-in-out;
+            animation: fadeIn 1s ease-out;
         }
-
-        @keyframes drip {
-            0% { opacity: 0; transform: translateY(-20px); }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .flame-letter {
-            display: inline-block;
-            transition: all 0.3s;
-            font-family: 'Permanent Marker', cursive;
-        }
-        .flame-letter.dimmed {
-            opacity: 0.3;
-            filter: grayscale(100%);
-        }
-        .flame-letter.active {
-            transform: scale(1.3);
-            text-shadow: 0 0 10px var(--neon-green), 2px 2px 0px #000;
-            color: var(--neon-green);
-        }
     </style>
 </head>
 <body>
 
-    <div class="container-box w-full max-w-md p-8 m-4 rounded-xl text-center relative">
-        <!-- Decoration -->
-        <div class="absolute -top-6 -left-6 text-5xl rotate-12">🔥</div>
-        <div class="absolute -bottom-6 -right-6 text-5xl -rotate-12">💘</div>
+    <div class="container-box w-full max-w-md p-6 sm:p-8 m-4 rounded-lg text-center relative">
+        <!-- Decoration - Icons changed to fit modern theme -->
+        <div class="absolute -top-4 -left-4 text-3xl rotate-12" style="color: var(--primary-accent);">⚙️</div>
+        <div class="absolute -bottom-4 -right-4 text-3xl -rotate-12" style="color: var(--secondary-accent);">⚡</div>
 
         <!-- Updated Title -->
-        <h1 class="graffiti-title text-5xl md:text-6xl mb-8 tracking-wider">
+        <h1 class="game-title text-4xl md:text-5xl mb-8 tracking-wider">
             FLAME MATCH
         </h1>
 
         <!-- Input Section -->
         <div class="space-y-6">
             <div class="flex flex-col text-left">
-                <label class="text-neon-blue text-sm mb-1 ml-2">YOUR NAME</label>
-                <input type="text" id="name1" placeholder="ENTER NAME 1" class="w-full text-2xl p-2" autocomplete="off">
+                <label class="text-gray-400 text-sm mb-1 ml-1">SUBJECT ALPHA [NAME 1]</label>
+                <input type="text" id="name1" placeholder="ENTER NAME" class="w-full text-xl" autocomplete="off">
             </div>
 
             <div class="flex flex-col text-left">
-                <label class="text-neon-blue text-sm mb-1 ml-2">PARTNER NAME</label>
-                <input type="text" id="name2" placeholder="ENTER NAME 2" class="w-full text-2xl p-2" autocomplete="off">
+                <label class="text-gray-400 text-sm mb-1 ml-1">SUBJECT BETA [NAME 2]</label>
+                <input type="text" id="name2" placeholder="ENTER NAME" class="w-full text-xl" autocomplete="off">
             </div>
 
-            <button onclick="calculateFlame()" class="spray-btn w-full text-3xl py-4 mt-6 cursor-pointer tracking-widest hover:bg-pink-400">
-                MATCH!
+            <button onclick="calculateFlame()" class="game-btn w-full text-xl py-3 mt-6 cursor-pointer hover:shadow-cyan-400">
+                INITIATE MATCH SEQUENCE
             </button>
         </div>
 
         <!-- Result Section -->
-        <div id="resultArea" class="hidden mt-8 border-t-2 border-dashed border-gray-500 pt-6">
+        <div id="resultArea" class="hidden mt-8 border-t-2 border-gray-700 pt-6">
             
             <!-- The Logic Breakdown (Visual) -->
-            <p class="text-gray-400 text-sm mb-2">REMAINING COUNT: <span id="countDisplay" class="text-white text-xl"></span></p>
+            <p class="text-gray-400 text-sm mb-4 font-mono">REMAINING LETTER COUNT: <span id="countDisplay" class="text-white text-2xl font-bold ml-1" style="color: var(--secondary-accent);"></span></p>
 
             <!-- The FLAME Acronym Display -->
-            <div class="flex justify-center space-x-4 text-3xl mb-6 font-bold" id="flame-acronym">
+            <div class="flex justify-center space-x-3 sm:space-x-4 mb-8" id="flame-acronym">
                 <span id="char-F" class="flame-letter">F</span>
                 <span id="char-L" class="flame-letter">L</span>
                 <span id="char-A" class="flame-letter">A</span>
@@ -174,19 +173,22 @@
 
             <!-- Final Result -->
             <div class="result-reveal">
-                <h2 id="finalWord" class="text-5xl text-neon-green mb-2 font-bold result-text" style="color: var(--neon-green);"></h2>
-                <div id="finalEmoji" class="text-6xl animate-bounce"></div>
+                <p class="text-sm text-gray-500 mb-1">ANALYSIS RESULT:</p>
+                <h2 id="finalWord" class="text-4xl sm:text-5xl mb-2 result-text" style="color: var(--primary-accent);"></h2>
+                <div id="finalEmoji" class="text-6xl animate-pulse"></div>
             </div>
         </div>
 
-        <div id="errorMsg" class="hidden text-red-500 mt-4 text-xl">
-            PLEASE ENTER BOTH NAMES!
+        <div id="errorMsg" class="hidden text-red-500 mt-4 text-sm">
+            ERROR: BOTH NAME FIELDS ARE REQUIRED FOR ANALYSIS.
         </div>
     </div>
 
     <script>
+        // The core logic remains unchanged, ensuring functional correctness.
         function calculateFlame() {
             // 1. Get Inputs and Normalize
+            // .replace(/[^A-Z]/g, '') ensures only capital letters are processed.
             const input1 = document.getElementById('name1').value.toUpperCase().replace(/[^A-Z]/g, '');
             const input2 = document.getElementById('name2').value.toUpperCase().replace(/[^A-Z]/g, '');
             const resultArea = document.getElementById('resultArea');
@@ -208,6 +210,8 @@
             // Iterate through first name to find matches in second name
             for (let i = 0; i < arr1.length; i++) {
                 const char = arr1[i];
+                if (char === null) continue; // Skip already matched characters
+                
                 const indexIn2 = arr2.indexOf(char);
 
                 if (indexIn2 !== -1) {
@@ -226,7 +230,6 @@
             document.getElementById('countDisplay').innerText = totalCount;
 
             // 4. Determine FLAME result
-            // F = Friends, L = Love, A = Angry, M = Marriage, E = Enemy
             const flameKeys = ['F', 'L', 'A', 'M', 'E'];
             const flameMeanings = {
                 'F': { word: 'FRIENDS', emoji: '🤝' },
@@ -236,27 +239,25 @@
                 'E': { word: 'ENEMY', emoji: '⚔️' }
             };
 
-            // Logic: Count left to right 1 to 5. 
-            // If count is > 5, it loops. This is a modulo operation.
-            // Using (count - 1) % 5 gives us the 0-based index.
-            
+            // Calculate 0-based index using modulo 5
             let resultIndex = 0;
             
             if (totalCount > 0) {
                 resultIndex = (totalCount - 1) % 5;
             } else {
-                resultIndex = 1; // Default to Love if identical
+                // If count is 0, names are exact letter matches (e.g., TOM & TOM). Default to LOVE.
+                resultIndex = 1; 
             }
 
             const resultChar = flameKeys[resultIndex];
             const finalData = flameMeanings[resultChar];
 
             // 5. Update UI
-            // Reset styles
+            // Reset and dim all FLAME indicators
             flameKeys.forEach(char => {
                 const el = document.getElementById(`char-${char}`);
                 el.classList.remove('active', 'dimmed');
-                el.classList.add('dimmed'); // Dim all first
+                el.classList.add('dimmed'); 
             });
 
             // Highlight the winner
@@ -264,7 +265,7 @@
             activeEl.classList.remove('dimmed');
             activeEl.classList.add('active');
 
-            // Set text and emoji
+            // Set final text and emoji
             document.getElementById('finalWord').innerText = finalData.word;
             document.getElementById('finalEmoji').innerText = finalData.emoji;
         }
